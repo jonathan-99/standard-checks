@@ -7,15 +7,26 @@ test $? -eq 0 || exit 1
 
 echo This will check various things....
 
+# sudo apt update, apt-get update, apt upgrade --fix-missing, and catch errors.
+
 echo Pinging....
 # ping internal 
 internal_array=$(ping -c 2 192.168.0.1 | awk '{print $1}')
+# incude a ping to 1.1.1.1
+
+# install ufw and configure
+
+# install and configure zabbix agent
 
 # ping external
 internal_array=$(ping -c 2 8.8.8.8 | awk '{print $1}')
 
 # route checking
 route=$(route -n | awk '{print $1}')
+## route default gw 192.168.1.1 eth0
+## route add 192.168.1.0
+
+# check date (pull in from ansible script and compare
 
 # iptables checking
 iptables=$(cat /etc/sysctl.conf | awk '{print $1}')
