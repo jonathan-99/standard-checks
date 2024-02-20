@@ -1,0 +1,35 @@
+---
+- name: Execute Bash scripts on remote devices
+  hosts: 
+    - host1
+    - host2
+    - host3
+    # Add more hosts as needed
+  
+  become: true  # If sudo privileges are required to execute the scripts, set this to true and provide the appropriate sudo password
+  
+  tasks:
+    - name: Copy bash scripts to remote device
+      copy:
+        src: "{{ item.src }}"  # Use the src variable defined for each host
+        dest: /tmp/  # Destination path on the remote device
+      
+      loop: "{{ scripts }}"  # Loop through the scripts variable
+    
+    - name: Change permissions to make the scripts executable
+      file:
+        path: "/tmp/{{ item.src | basename }}"
+        mode: "+x"
+      loop: "{{ scripts }}"
+      ignore_errors: yes  # Continue if changing permissions fails
+    
+    - name: Execute bash scripts
+      shell: "/tmp/{{ item.src | basename }}"  # Command to execute the script
+      loop: "{{ scripts }}"
+      ignore_errors: yes  # Continue if changing permissions fails
+
+
+scripts:
+  - src: check.sh
+#  - src: /path/to/script2.sh
+#  - src: /path/to/script3.sh
